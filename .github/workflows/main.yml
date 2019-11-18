@@ -14,9 +14,10 @@ jobs:
     steps:
     - uses: actions/checkout@v1
       with:
-        path: "/home/runner/.ansible/collections/ansible_collections/mafalb/docker"
+        path: "./collections/ansible_collections/mafalb/docker"
     - run: pwd
     - run: whoami
     - run: echo $HOME
-    - run: ls -R $HOME/.ansible/collections/ansible_collections/mafalb/docker
+    - run: ansible-galaxy collection install geerlingguy.php_roles
+    - run: ls -R ./collections/ansible_collections/mafalb/docker
     
