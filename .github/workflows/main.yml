@@ -12,17 +12,16 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
-      - name: install ansible ppa
-        run: sudo apt-add-repository --yes --update ppa:ansible/ansible-2.9
       - name: install ansible
-        run: sudo apt-get upgrade ansible
+        run: |
+          sudo apt-add-repository --yes --update ppa:ansible/ansible-2.9
+          sudo apt-get upgrade ansible
           
-    - uses: actions/checkout@v1
-      with:
-        path: "./collections/ansible_collections/mafalb/docker"
-    - run: pwd
-    - run: whoami
-    - run: echo $HOME
-    - run: ansible-galaxy collection install geerlingguy.php_roles
-    - run: ls -R ./collections/ansible_collections/mafalb/docker
-    
+      - uses: actions/checkout@v1
+        with:
+          path: "./collections/ansible_collections/mafalb/docker"
+      - run: pwd
+      - run: whoami
+      - run: echo $HOME
+      - run: ansible-galaxy collection install geerlingguy.php_roles
+      - run: ls -R ./collections/ansible_collections/mafalb/docker
