@@ -13,7 +13,10 @@ jobs:
 
     steps:
     - uses: actions/checkout@v1
+      with:
+        path: '.ansible/collections/ansible_collections/mafalb/docker'
     - run: pwd
     - run: whoami
     - run: echo $HOME
+    - run: ls -R $HOME
     
