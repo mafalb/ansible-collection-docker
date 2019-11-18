@@ -12,6 +12,11 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
+      - name: install ansible
+        run: |
+          sudo apt-add-repository --yes --update ppa:ansible/ansible-2.9
+          sudo apt-get upgrade ansible
+          
     - uses: actions/checkout@v1
       with:
         path: "./collections/ansible_collections/mafalb/docker"
