@@ -1,4 +1,4 @@
-name: main
+name: CI
 
 on:
   schedule:
@@ -14,4 +14,6 @@ jobs:
     steps:
     - uses: actions/checkout@v1
     - run: pwd
+    - run: whoami
+    - run: echo $HOME
     
