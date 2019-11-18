@@ -15,7 +15,7 @@ jobs:
       - name: install ansible
         run: |
           sudo apt-add-repository --yes --update ppa:ansible/ansible-2.9
-          sudo apt-get install --upgrade-only ansible
+          sudo apt-get install --only-upgrade ansible
           
       - uses: actions/checkout@v1
         with:
