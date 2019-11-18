@@ -12,7 +12,7 @@ jobs:
     runs-on: ubuntu-18.04
 
     steps:
-      - run: echo $GITHUB_WORKSPACE
+
       - name: install ansible
         run: |
           sudo apt-add-repository --yes --update ppa:ansible/ansible-2.9
@@ -21,9 +21,3 @@ jobs:
       - uses: actions/checkout@v1
         with:
           path: "./collections/ansible_collections/mafalb/docker"
-      - run: pwd
-      - run: whoami
-      - run: echo $HOME
-      - run: echo $GITHUB_WORKSPACE
-      - run: ansible-galaxy collection install geerlingguy.php_roles
-      - run: ls -R ./collections/ansible_collections/mafalb/docker
