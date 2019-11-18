@@ -1,0 +1,19 @@
+# vim: set ft=yaml ts=2 expandtab:
+---
+
+# get the keyid with
+# $ gpg --keyid-format 0xlong docker-ce-Debian.gpg.asc
+#
+- name: dockers gpg key does exist
+  apt_key:
+    data: "{{ lookup('file', 'docker-ce-Debian.gpg.asc') }}"
+    id: 0x8D81803C0EBFCD88
+    state: present
+
+- name: docker repo does exist
+  apt_repository:
+    repo: deb https://download.docker.com/linux/{{ ansible_distribution|lower }} {{ ansible_distribution_release }} stable
+    update_cache: true
+    state: present
+
+...

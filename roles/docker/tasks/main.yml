@@ -1,0 +1,50 @@
+# vim: set ft=yaml ts=2 expandtab:
+---
+
+- name: set OS specific variables
+  include_vars:
+    file: "{{ item }}"
+  with_first_found:
+    - "{{ ansible_os_family }}-{{ ansible_distribution }}.yml"
+    - "{{ ansible_os_family }}.yml"
+
+- name: Assertions
+  assert:
+    that:
+      - docker_package is defined
+      - docker_service is defined
+
+- debug: var="{{ item }}"
+  loop:
+    - docker_package
+    - docker_service
+  tags:
+    - never
+    - debug
+
+- name: docker-ce repo does exist
+  when:
+    - docker_package == "docker-ce"
+  include_tasks:
+    file: docker-ce-{{ ansible_os_family }}.yml
+
+- name: docker daemon is present
+  package:
+    name: "{{ docker_package }}"
+    state: present
+
+# Is there a better way to detect if running in a container?
+# also see
+# https://github.com/ansible/ansible/issues/64954
+#
+- name: docker service is started
+  when:
+    - not ( ansible_virtualization_role = 'guest' and ansible_virtualization_type == 'docker')
+    - not ( ansible_virtualization_role == 'guest' and ansible_virtualization_type == 'podman')
+    - not ( lookup('env', 'container') == 'podman')
+  service:
+    name: "{{ docker_service }}"
+    state: started
+    enabled: true
+
+...

@@ -1,0 +1,25 @@
+# vim: set ft=yaml ts=2 expandtab:
+---
+
+# get the fingerprint with
+# $ $ gpg --with-fingerprint -n docker-ce-RedHat.gpg.asc
+#
+- name: dockers gpg key does exist
+  rpm_key:
+    key: "{{ lookup('file', 'docker-ce-RedHat.gpg.asc') }}"
+    fingerprint: 060A 61C5 1B55 8A7F 742B  77AA C52F EB6B 621E 9F35
+    state: present
+
+# the yum/dnf links are very similar for EL and Fedora
+# https://download.docker.com/linux/fedora/$releasever/$basearch/stable
+# https://download.docker.com/linux/centos/7/$basearch/stable
+# we can do it with one template for all
+#
+- name: docker repo does exist
+  template:
+    src: docker-ce.repo.j2
+    dest: /etc/yum.repos.d/docker-ce.repo
+    state: present
+    backup: true
+
+...

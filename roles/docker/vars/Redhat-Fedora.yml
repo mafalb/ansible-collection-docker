@@ -1,0 +1,10 @@
+# vim: set ft=yaml ts=2 expandtab:
+---
+
+# there is no docker provided with newer Fedora
+# but you can install 3rd party packages
+#
+docker_package: "{{ ( ansible_distribution_major_version < 31)|ternary('docker', 'docker-ce') }}"
+docker_service: docker
+
+...
