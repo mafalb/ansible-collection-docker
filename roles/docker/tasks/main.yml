@@ -1,12 +1,19 @@
 # vim: set ft=yaml ts=2 expandtab:
 ---
 
+- name: debug distribution variables
+  debug: var="{{ item }}"
+  loop:
+    - ansible_os_family
+    - ansible_distribution
+    - ansible_distribution_major_version
+
 - name: set OS specific variables
   include_vars:
     file: "{{ item }}"
   with_first_found:
     - "{{ ansible_os_family }}-{{ ansible_distribution }}.yml"
-    - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}"
+    - "{{ ansible_os_family }}-{{ ansible_distribution_major_version }}.yml"
     - "{{ ansible_os_family }}.yml"
 
 - name: Assertions
@@ -14,6 +21,8 @@
     that:
       - docker_package is defined
       - docker_service is defined
+    fail_msg:
+      Do you try to apply this role to an unsupported Operating System {{ ansible_os_family }}-{{ ansible_distribution}}-{{ ansible_distribution_major_version}}
 
 - debug: var="{{ item }}"
   loop:
