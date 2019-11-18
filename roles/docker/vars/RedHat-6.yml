@@ -1,0 +1,8 @@
+# vim: set ft=yaml ts=2 expandtab:
+---
+
+# no docker for RHEL 6
+# however, some time ago there was a docker-io package in EPEL,
+# but it disappeared.
+
+...

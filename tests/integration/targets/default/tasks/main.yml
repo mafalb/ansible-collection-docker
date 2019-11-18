@@ -1,0 +1,12 @@
+# vim: set ft=yaml ts=2 expandtab:
+---
+
+- name: docker is present
+  include_role:
+    name: mafalb.docker.docker
+
+- name: get docker daemon version
+  changed_when: false
+  command: dockerd --version
+
+...

@@ -4,7 +4,7 @@
 # there is no docker provided with newer RHEL
 # but you can install 3rd party packages
 #
-docker_package: "{{ ( ansible_distribution_major_version < 8)|ternary('docker', 'docker-ce') }}"
+docker_package: "{{ ( ansible_distribution_major_version < '8')|ternary('docker', 'docker-ce') }}"
 docker_service: docker
 
 ...
