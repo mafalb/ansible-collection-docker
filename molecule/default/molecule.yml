@@ -1,0 +1,87 @@
+# vim: set ft=yaml ts=2 expandtab:
+---
+
+dependency:
+  name: galaxy
+  options:
+    role-file: idontexist.yml   # avoid warning while running molecule 
+    requirements-file: molecule/default/requirements.yml
+
+driver:
+
+  name: docker
+
+
+lint: |
+  set -e
+  ! grep -r "no_log: false" .
+  ansible-lint -v
+  ansible-lint roles/*/vars/*.yml
+  flake8 -v
+
+platforms:
+- name: ${CI_HOSTNAME-"ci-rocky8"}
+  image: ${CI_IMAGE:-"quay.io/rockylinux/rockylinux:8"}
+  command: /lib/systemd/systemd
+  network_mode: bridge
+  docker_networks:
+  - name: molecule-internal
+    internal: true
+  networks:
+  - name: molecule-internal
+  volumes:
+  - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  tmpfs:
+  - /tmp
+  - /run
+  - /run/lock
+  capabilities:
+  - SYS_ADMIN
+  privileged: ${CI_CONTAINER_PRIVILEGED:-false}
+  pre_build_image: ${CI_CONTAINER_PREBUILT:-false}
+  tty: true
+  groups:
+  - ci
+
+- name: ci-proxy
+  image: quay.io/centos/centos:8
+  command: /lib/systemd/systemd
+  network_mode: bridge
+  networks:
+  - name: molecule-external
+  - name: molecule-internal
+  volumes:
+  - "/sys/fs/cgroup:/sys/fs/cgroup:ro"
+  tmpfs:
+  - /tmp
+  - /run
+  - /run/lock
+  capabilities:
+  - SYS_ADMIN
+  privileged: ${CI_CONTAINER_PRIVILEGED:-false}
+  pre_build_image: ${CI_CONTAINER_PREBUILT:-false}
+  tty: true
+  groups:
+  - infrastructure_group
+  - proxy_group
+
+provisioner:
+  name: ansible
+  ansible_args:
+    - --tags=all,debug
+    - --diff
+  config_options:
+    defaults:
+      gathering: smart
+      interpreter_python: auto
+      stdout_callback: yaml
+      bin_ansible_callbacks: true
+  lint:
+    name: ansible-lint
+
+verifier:
+  name: ansible
+  lint:
+    name: ansible-lint
+
+...
